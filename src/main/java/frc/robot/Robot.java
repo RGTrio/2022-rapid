@@ -8,9 +8,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-// import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,7 +16,6 @@ import frc.robot.subsystems.Conveyer;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.IntakeRollers;
-//import edu.wpi.first.wpilibj.GenericHID;
 import frc.robot.Constants.IntakeRollersConstants;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -115,9 +111,10 @@ public class Robot extends TimedRobot {
     
     m_robotDrive.tankDrive(-Math.pow(m_stick.getLeftY(), 2), Math.pow(m_stick.getRightY(), 2)); 
     m_robotIntake.intakeRun(m_stick, IntakeRollersConstants.kIntakeSpeed);
+    //m_robotIntake.deploy(m_stick);
     //m_robotFlywheel.flywheelRun(m_stick, ConveyerConstants.kconveyerSpeed);
     // m_robotConveyer.conveyerRun(m_stick, ConveyerConstants.kconveyerSpeed);
-    m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
+    //m_robotDrive.arcadeDrive(-m_stick.getLeftY(), m_stick.getLeftX());
 
   }
 

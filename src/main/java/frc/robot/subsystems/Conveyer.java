@@ -9,7 +9,8 @@ import frc.robot.Constants.ConveyerConstants;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Conveyer {
-    private TalonSRX conveyer = new TalonSRX(ConveyerConstants.kConveyerID);
+    private TalonSRX conveyerMaster = new TalonSRX(ConveyerConstants.kConveyerID);
+    private TalonSRX conveyerSlave = new TalonSRX(ConveyerConstants.kConveyerID2);
 
   public static enum ConveyerStates {
     OFF, IN, OUT
@@ -21,18 +22,19 @@ public class Conveyer {
    * Creates a new Conveyer.
    */
   public Conveyer() {
-    conveyer.setNeutralMode(NeutralMode.Brake);
-    conveyer.setInverted(true);
+    conveyerSlave.follow(conveyerMaster);
+    conveyerMaster.setNeutralMode(NeutralMode.Brake);
+    
 
   }
 
   public void conveyerRun(XboxController controller, double power)
   {
-    if (controller.getRightBumperPressed())
+    if (controller.getLeftBumperPressed())
     {
       index(power);
     }
-    if (controller.getRightBumperReleased())
+    if (controller.getLeftBumperReleased())
     {
       stop();
     }
@@ -43,14 +45,14 @@ public class Conveyer {
    * @param power the power to spin the conveyer at [-1, 1]. Negative values spin outwards.
    */
   public void index(double power) {
-    conveyer.set(ControlMode.PercentOutput, power);
+    conveyerMaster.set(ControlMode.PercentOutput, power);
   }
 
   /**
    * Stop the conveyer
    */
   public void stop() {
-    conveyer.set(ControlMode.PercentOutput, 0);
+    conveyerMaster.set(ControlMode.PercentOutput, 0);
   }
 
 

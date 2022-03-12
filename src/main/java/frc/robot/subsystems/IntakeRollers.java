@@ -4,6 +4,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,7 +13,7 @@ import frc.robot.Constants.IntakeRollersConstants;
 
 public class IntakeRollers {
     private TalonSRX rollers = new TalonSRX(IntakeRollersConstants.kRollersID);
-    //private final Solenoid deploy = new Solenoid(IntakeRollersConstants.kdeployChannel);
+    private final Solenoid deploy = new Solenoid(PneumaticsModuleType.CTREPCM, IntakeRollersConstants.kdeployChannel);
 
 
   public static enum IntakeRollersStates {
@@ -26,6 +28,8 @@ public class IntakeRollers {
   public IntakeRollers() {
     rollers.setNeutralMode(NeutralMode.Brake);
     rollers.setInverted(true);
+    deploy.set(true);
+    deploy.setPulseDuration(IntakeRollersConstants.kPulseDuration);
     
   }
 
@@ -73,7 +77,11 @@ public class IntakeRollers {
     return state;
   }
 
-  // public void deploy() {
-  //   deploy.set(!deploy.get());
-  // }
+  public void deploy(XboxController controller)
+  {
+    if (controller.getRightBumperPressed())
+    {
+      deploy.toggle();
+    }
+  }
 }

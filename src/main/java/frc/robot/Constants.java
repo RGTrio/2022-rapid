@@ -28,18 +28,20 @@ public final class Constants {
         public static final int kRollersID = 0;
         public static final int kIntakeSpeed = 50;
         public static final int kdeployChannel = 1;
-
+        public static final double kPulseDuration = 0.25;
     }
 
     public static final class ConveyerConstants
     {
         public static final int kConveyerID = 10000;
+        public static final int kConveyerID2 = 10000;
         public static final int kconveyerSpeed = 50;
     }
 
     public static final class FlywheelConstants
     {
         public static final int kFlywheelID = 10000;
+        public static final int kFlywheelID2 = 10000;
         public static final int kFlywheelSpeed = 50;
     }
 

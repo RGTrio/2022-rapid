@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 
@@ -56,14 +55,14 @@ public class DriveTrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+   
+  public void arcadeDrive(double throttle, double turn) {   //commented out , this code does not build -Andy
+   double leftPower = throttle + turn;
+   double rightPower = throttle - turn;
 
-//   public void arcadeDrive(double throttle, double turn) {   //commented out , this code does not build -Andy
-//     double leftPower = throttle + turn;
-//     double rightPower = throttle - turn;
-
-//     left.set(ControlMode.PercentOutput, leftPower);
-//     right.set(ControlMode.PercentOutput, rightPower);
- // }
+   leftMaster.set(ControlMode.PercentOutput, leftPower);
+   rightMaster.set(ControlMode.PercentOutput, rightPower);
+}
 
  public void tankDrive(double leftPower, double rightPower) {
     leftMaster.set(ControlMode.PercentOutput, leftPower);
