@@ -60,12 +60,12 @@ public class Robot extends TimedRobot
     m_robotContainer = new RobotContainer();
 
     //SmartDashboard.putNumber("Joystick Y value", m_stick.getLeftY());
-    SmartDashboard.putBoolean("Left Conveyer", m_robotConveyer.getLeftConveyerState());
-    SmartDashboard.putBoolean("Right Conveyer", m_robotConveyer.getRightConveyerState());
-    SmartDashboard.putBoolean("Intake Roller", m_robotIntake.getRollerState());
-    SmartDashboard.putBoolean("Flywheel High", m_robotFlywheel.getFlywheelState());
-    SmartDashboard.putNumber("Flywheel Velocity", m_robotFlywheel.getFlywheelVelocity());
+    dashboardSetup();
+    
     m_chooser.setDefaultOption("TwoBallAuto", "TwoBallAuto");
+    m_chooser.addOption("None", "None");
+    m_chooser.addOption("TaxiOnly", "TaxiOnly");
+    m_chooser.addOption("OneBallAuto", "OneBallAuto");
     m_chooser.addOption("ThreeBallAuto", "ThreeBallAuto");
     SmartDashboard.putData(m_chooser);
   }
@@ -112,9 +112,18 @@ public class Robot extends TimedRobot
   public void autonomousPeriodic() 
   {
     autoTimeElapsed = Timer.getFPGATimestamp() - autoStart;
-    switch(m_chooser.getSelected()) {
+    switch(m_chooser.getSelected()) 
+    {
       case "TwoBallAuto":
         twoBallIntake(autoTimeElapsed);
+        break;
+      case "None":
+        break;
+      case "TaxiOnly":
+        taxi(autoTimeElapsed);
+        break;
+      case "OneBallAuto":
+        oneBallIntake(autoTimeElapsed);
         break;
       case "ThreeBallAuto":
         threeBallIntake(autoTimeElapsed);
@@ -130,6 +139,8 @@ public class Robot extends TimedRobot
         autoToggle = true;
       }
     }
+    
+    dashboardSetup();
 
   }
 
@@ -150,6 +161,8 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic() 
   {
+    dashboardSetup();
+
     //m_robotDrive.tankCurvedDrive(-m_stick.getLeftY(), m_stick.getRightY());  // LDR revert to previous tested code
     m_robotIntake.intakeToggle(m_stick, m_stick2, IntakeRollersConstants.kIntakeSpeed);
     m_robotFlywheel.flyWheelToggle(m_stick, m_stick2, FlywheelConstants.kFlywheelLowSpeed, FlywheelConstants.kFlywheelHighSpeed);
@@ -157,6 +170,7 @@ public class Robot extends TimedRobot
     m_robotClimber.ClimberRun(m_stick, m_stick2, ClimberConstants.kClimberSpeed);
     m_robotDrive.arcadeCurvedDrive(m_stick.getRightX()*0.65, -m_stick.getLeftY());
     m_robotClimber.climberjoystick(m_stick2, m_stick2.getLeftY());
+
   }
 
   @Override
@@ -222,9 +236,7 @@ public class Robot extends TimedRobot
       m_robotIntake.stop();
     }
 
-    
   }
-
 
   public void threeBallIntake(double autoTimeElapsed)
   {
@@ -295,5 +307,65 @@ public class Robot extends TimedRobot
     {
       m_robotIntake.stop();
     }
+  }
+
+  public void taxi(double autoTimeElapsed)
+  {
+    if(autoTimeElapsed > 1.0 && autoTimeElapsed < 2.7)
+    {
+      m_robotDrive.forward(0.5);
+    }
+    else if(autoTimeElapsed > 4.0 && autoTimeElapsed < 5.7)
+    {
+      m_robotDrive.forward(-0.5);
+    }
+    else
+    {
+      m_robotDrive.stopMotor();
+    }
+  }
+
+  public void oneBallIntake(double autoTimeElapsed)
+  {
+    if(autoTimeElapsed < 5.0)  
+    {
+      m_robotFlywheel.shoot(FlywheelConstants.kFlywheelHighSpeed);
+    }
+    else
+    {
+      m_robotFlywheel.stop();
+    }
+    
+    if(autoTimeElapsed > 2.0 && autoTimeElapsed < 5.0)
+    {
+      m_robotConveyer.index(ConveyerConstants.kConveyerSpeed);
+    }
+    else
+    {
+      m_robotConveyer.stop();
+    }
+    
+    if(autoTimeElapsed > 6.0 && autoTimeElapsed < 7.7)
+    {
+      m_robotDrive.forward(0.5);
+    }
+    else if(autoTimeElapsed > 9.0 && autoTimeElapsed < 10.7)
+    {
+      m_robotDrive.forward(-0.5);
+    }
+    else
+    {
+      m_robotDrive.stopMotor();
+    }
+
+  }
+
+  public void dashboardSetup()
+  {
+    SmartDashboard.putBoolean("Left Conveyer", m_robotConveyer.getLeftConveyerState());
+    SmartDashboard.putBoolean("Right Conveyer", m_robotConveyer.getRightConveyerState());
+    SmartDashboard.putBoolean("Intake Roller", m_robotIntake.getRollerState());
+    SmartDashboard.putBoolean("Flywheel High", m_robotFlywheel.getFlywheelState());
+    SmartDashboard.putNumber("Flywheel Velocity", m_robotFlywheel.getFlywheelVelocity());
   }
 }
